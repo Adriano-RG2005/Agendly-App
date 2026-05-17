@@ -20,10 +20,10 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@domain/*": ["./src/domain/*"],
-      "@application/*": ["./src/application/*"],
-      "@infrastructure/*": ["./src/infrastructure/*"],
-      "@interfaces/*": ["./src/interfaces/*"],
+      "@domain/*": ["./src/core/domain/*"],
+      "@application/*": ["./src/core/application/*"],
+      "@infrastructure/*": ["./src/core/infrastructure/*"],
+      "@presentation/*": ["./src/core/presentation/*"],
       "@emails/*": ["./emails/*"]
     }
   },

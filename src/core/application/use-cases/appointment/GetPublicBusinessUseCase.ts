@@ -3,7 +3,7 @@ import { IAvailabilityRepository } from "@application/interfaces/IAvailabilityRe
 import { IAppointmentRepository } from "@application/interfaces/IAppointmentRepository";
 import { Business } from "@domain/entities/Business";
 import { Availability } from "@domain/entities/Availability";
-import { NotFoundError } from "@/domain/errors/DomainError";
+import { NotFoundError } from "@/domain/errors";
 
 export interface PublicBusinessResult {
   business: Business;

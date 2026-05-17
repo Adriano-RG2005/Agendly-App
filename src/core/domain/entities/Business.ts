@@ -1,4 +1,4 @@
-import { ValidationError } from "@/domain/errors/DomainError"
+import { ValidationError } from "@/domain/errors"
 
 export class Business {
   private constructor(

@@ -1,4 +1,4 @@
-import { NotFoundError, UnauthorizedError } from "@/domain/errors/DomainError";
+import { NotFoundError, UnauthorizedError } from "@/domain/errors";
 import { IAppointmentRepository } from "@application/interfaces/IAppointmentRepository";
 import { IBusinessRepository } from "@application/interfaces/IBusinessRepository";
 import { Appointment } from "@domain/entities/Appointment";

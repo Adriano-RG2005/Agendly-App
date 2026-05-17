@@ -2,7 +2,7 @@ import { IAuthService } from "@application/interfaces/IAuthService";
 import { IUserRepository } from "@application/interfaces/IUserRepository";
 import { RegisterDTO } from "@application/dtos/auth.dto";
 import { User } from "@domain/entities/User";
-import { DomainError } from "@/domain/errors/DomainError";
+import { DomainError } from "@/domain/errors";
 
 export class RegisterUseCase {
   constructor(

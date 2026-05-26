@@ -49,7 +49,7 @@ export default function Register() {
               placeholder="Mínimo 8 caracteres"
             />
           </div>
-          <Button className="w-full" size="lg">
+          <Button variant="outline" className="w-full" size="lg">
             Crear cuenta
           </Button>
           <p className="text-center text-sm text-muted-foreground">

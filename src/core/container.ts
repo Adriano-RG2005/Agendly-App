@@ -29,8 +29,8 @@ import { GetBusinessAppointmentsUseCase } from "@application/use-cases/appointme
 import { GetPublicBusinessUseCase } from "@application/use-cases/appointment/GetPublicBusinessUseCase";
 import { SendAppointmentRemindersUseCase } from "@application/use-cases/appointment/SendAppointmentRemindersUseCase";
 
-const registerUseCase = new RegisterUseCase(authService, userRepository);
-const loginUseCase = new LoginUseCase(authService);
+export const registerUseCase = new RegisterUseCase(authService, userRepository);
+export const loginUseCase = new LoginUseCase(authService);
 const createBusinessUseCase = new CreateBusinessUseCase(businessRepository);
 const updateBusinessUseCase = new UpdateBusinessUseCase(businessRepository);
 const upsertAvailabilityUseCase = new UpsertAvailabilityUseCase(

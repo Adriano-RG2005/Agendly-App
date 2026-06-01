@@ -2,7 +2,7 @@ import { IAppointmentRepository } from "@application/interfaces/IAppointmentRepo
 import { IBusinessRepository } from "@application/interfaces/IBusinessRepository";
 import { INotificationService } from "@application/interfaces/INotificationService";
 import { AppointmentActionDTO } from "@application/dtos/appointment.dto";
-import { NotFoundError, UnauthorizedError } from "@/domain/errors";
+import { NotFoundError, UnauthorizedError } from "@domain/errors";
 
 export class CancelAppointmentUseCase {
   constructor(

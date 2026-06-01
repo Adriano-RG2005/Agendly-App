@@ -2,7 +2,7 @@ import { IAuthService } from "@application/interfaces/IAuthService";
 import { IUserRepository } from "@application/interfaces/IUserRepository";
 import { RegisterDTO } from "@application/dtos/auth.dto";
 import { User } from "@domain/entities/User";
-import { DomainError } from "@/domain/errors";
+import { DomainError } from "@domain/errors";
 
 export class RegisterUseCase {
   constructor(
@@ -31,6 +31,7 @@ export class RegisterUseCase {
 
       return user;
     } catch (error) {
+      console.error("Failed to create user profile:", error);
       // Compensación: si falla la creación del perfil,
       // eliminamos el usuario de Auth para evitar inconsistencias
       await this.authService.deleteUser(authUser.id);

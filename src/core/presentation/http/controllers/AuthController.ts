@@ -11,6 +11,10 @@ export class AuthController {
     private readonly loginUseCase: LoginUseCase,
   ) {}
 
+
+  /**
+   * @deprecated Use the registerAction function from the actions module instead.
+   */
   async register(req: Request): Promise<Response> {
     try {
       const body = await req.json();

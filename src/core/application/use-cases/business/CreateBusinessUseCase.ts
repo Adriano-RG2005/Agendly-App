@@ -1,7 +1,7 @@
 import { IBusinessRepository } from "@application/interfaces/IBusinessRepository";
 import { CreateBusinessDTO } from "@application/dtos/business.dto";
 import { Business } from "@domain/entities/Business";
-import { ConflictError } from "@/domain/errors";
+import { ConflictError } from "@domain/errors";
 
 export class CreateBusinessUseCase {
   constructor(private readonly businessRepository: IBusinessRepository) {}

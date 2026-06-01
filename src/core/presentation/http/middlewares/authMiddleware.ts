@@ -1,3 +1,4 @@
+import { UnauthorizedError } from "@/core/domain/errors";
 import { IAuthService } from "@application/interfaces/IAuthService";
 import { AuthUser } from "@application/interfaces/IAuthService";
 
@@ -7,7 +8,7 @@ export class AuthMiddleware {
   async authenticate(req: Request): Promise<AuthUser> {
     const header = req.headers.get("Authorization");
     if (!header?.startsWith("Bearer ")) {
-      throw new Error("UNAUTHORIZED");
+      throw new UnauthorizedError();
     }
 
     const token = header.replace("Bearer ", "");

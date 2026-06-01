@@ -2,7 +2,7 @@ import { IAvailabilityRepository } from "@application/interfaces/IAvailabilityRe
 import { IBusinessRepository } from "@application/interfaces/IBusinessRepository";
 import { UpsertAvailabilityDTO } from "@application/dtos/availability.dto";
 import { Availability } from "@domain/entities/Availability";
-import { NotFoundError, UnauthorizedError } from "@/domain/errors";
+import { NotFoundError, UnauthorizedError } from "@domain/errors";
 
 export class UpsertAvailabilityUseCase {
   constructor(

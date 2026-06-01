@@ -5,7 +5,7 @@ import { INotificationService } from "@application/interfaces/INotificationServi
 import { CreateAppointmentDTO } from "@application/dtos/appointment.dto";
 import { Appointment } from "@domain/entities/Appointment";
 import { addMinutes, format } from "date-fns";
-import { ConflictError, NotFoundError, ValidationError } from "@/domain/errors";
+import { ConflictError, NotFoundError, ValidationError } from "@domain/errors";
 
 export class CreateAppointmentUseCase {
   constructor(

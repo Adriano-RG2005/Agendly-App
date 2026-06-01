@@ -1,7 +1,7 @@
 import { IBusinessRepository } from "@application/interfaces/IBusinessRepository";
 import { UpdateBusinessDTO } from "@application/dtos/business.dto";
 import { Business } from "@domain/entities/Business";
-import { NotFoundError, UnauthorizedError } from "@/domain/errors";
+import { NotFoundError, UnauthorizedError } from "@domain/errors";
 
 export class UpdateBusinessUseCase {
   constructor(private readonly businessRepository: IBusinessRepository) {}

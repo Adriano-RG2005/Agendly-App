@@ -1,7 +1,7 @@
 import { IAppointmentRepository } from "@application/interfaces/IAppointmentRepository";
 import { IBusinessRepository } from "@application/interfaces/IBusinessRepository";
 import { AppointmentActionDTO } from "@application/dtos/appointment.dto";
-import { NotFoundError, UnauthorizedError } from "@/domain/errors";
+import { NotFoundError, UnauthorizedError } from "@domain/errors";
 
 export class CompleteAppointmentUseCase {
   constructor(

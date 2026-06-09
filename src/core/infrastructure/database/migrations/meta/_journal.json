@@ -8,6 +8,13 @@
       "when": 1776567661465,
       "tag": "0000_first_harpoon",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1780963631090,
+      "tag": "0001_demonic_squadron_sinister",
+      "breakpoints": true
     }
   ]
 }

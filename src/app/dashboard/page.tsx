@@ -1,4 +1,5 @@
 import { createClient } from "@infrastructure/lib/supabase/server";
+import { getDashboardDataUseCase } from "@/core/container";
 import { redirect } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -6,68 +7,8 @@ import { CalendarCheck, Clock, Users, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-
-const stats = [
-  { label: "Citas hoy", value: "3", icon: CalendarCheck, trend: "+2 vs ayer" },
-  {
-    label: "Esta semana",
-    value: "12",
-    icon: TrendingUp,
-    trend: "+5 vs semana pasada",
-  },
-  { label: "Clientes únicos", value: "8", icon: Users, trend: "este mes" },
-  { label: "Próxima cita", value: "10:00", icon: Clock, trend: "en 45 min" },
-];
-
-const upcomingAppointments = [
-  {
-    id: 1,
-    client: "Juan Pérez",
-    time: "10:00",
-    date: "Hoy",
-    service: "Terapia psicológica",
-    status: "confirmed" as const,
-  },
-  {
-    id: 2,
-    client: "Ana López",
-    time: "14:00",
-    date: "Hoy",
-    service: "Terapia psicológica",
-    status: "confirmed" as const,
-  },
-  {
-    id: 3,
-    client: "Carlos Ruiz",
-    time: "16:00",
-    date: "Hoy",
-    service: "Terapia psicológica",
-    status: "confirmed" as const,
-  },
-  {
-    id: 4,
-    client: "Laura Mendoza",
-    time: "09:00",
-    date: "Mañana",
-    service: "Terapia psicológica",
-    status: "confirmed" as const,
-  },
-];
-
-const statusConfig = {
-  confirmed: {
-    label: "Confirmada",
-    className: "bg-green-500/10 text-green-500 border-green-500/20",
-  },
-  completed: {
-    label: "Completada",
-    className: "bg-muted text-muted-foreground",
-  },
-  cancelled: {
-    label: "Cancelada",
-    className: "bg-destructive/10 text-destructive border-destructive/20",
-  },
-};
+import { NotFoundError } from "@domain/errors";
+import NoBusinessView from "@/components/NoBusinessView";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -79,7 +20,73 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  const userName = user.user_metadata?.name || user.email?.split("@")[0] || "Usuario";
+  let dashboardData;
+  let hasBusiness = true;
+
+  try {
+    dashboardData = await getDashboardDataUseCase.execute(user.id);
+  } catch (error) {
+    if (error instanceof NotFoundError) {
+      hasBusiness = false;
+    } else {
+      throw error;
+    }
+  }
+
+  const userName =
+    user.user_metadata?.name || user.email?.split("@")[0] || "Usuario";
+
+  if (!hasBusiness) {
+    return <NoBusinessView userName={userName} />;
+  }
+
+  const { stats: dashboardStats, upcomingAppointments } = dashboardData!;
+
+  const stats = [
+    {
+      label: "Citas hoy",
+      value: dashboardStats.todayAppointments.toString(),
+      icon: CalendarCheck,
+      trend: "hoy",
+    },
+    {
+      label: "Esta semana",
+      value: dashboardStats.weekAppointments.toString(),
+      icon: TrendingUp,
+      trend: "esta semana",
+    },
+    {
+      label: "Clientes únicos",
+      value: dashboardStats.uniqueClients.toString(),
+      icon: Users,
+      trend: "total",
+    },
+    {
+      label: "Próxima cita",
+      value: dashboardStats.nextAppointmentTime || "--:--",
+      icon: Clock,
+      trend: dashboardStats.nextAppointmentTime ? "próximamente" : "sin citas",
+    },
+  ];
+
+  const statusConfig = {
+    pending: {
+      label: "Pendiente",
+      className: "bg-yellow-500/10 text-yellow-500 border-yellow-500/20",
+    },
+    confirmed: {
+      label: "Confirmada",
+      className: "bg-green-500/10 text-green-500 border-green-500/20",
+    },
+    completed: {
+      label: "Completada",
+      className: "bg-muted text-muted-foreground",
+    },
+    cancelled: {
+      label: "Cancelada",
+      className: "bg-destructive/10 text-destructive border-destructive/20",
+    },
+  };
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -91,7 +98,7 @@ export default async function DashboardPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {stats.map((stat) => (
-          <Card key={stat.label}>
+          <Card key={stat.label} className="shadow-sm">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <stat.icon className="h-5 w-5 text-muted-foreground" />
@@ -105,42 +112,54 @@ export default async function DashboardPage() {
       </div>
 
       {/* Upcoming */}
-      <Card>
+      <Card className="shadow-sm">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-lg">Próximas citas</CardTitle>
-          <Button variant="ghost" size="sm" asChild>
+          <CardTitle className="text-lg font-semibold">Próximas citas</CardTitle>
+          <Button variant="outline" size="sm" asChild className="font-medium">
             <Link href="/dashboard/appointments">Ver todas</Link>
           </Button>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {upcomingAppointments.map((apt) => (
-              <div
-                key={apt.id}
-                className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
-              >
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium truncate">{apt.client}</p>
-                  <p className="text-sm text-muted-foreground">{apt.service}</p>
-                </div>
-                <div className="text-right ml-4">
-                  <p className="text-sm font-medium">{apt.time}</p>
-                  <p className="text-xs text-muted-foreground">{apt.date}</p>
-                </div>
-                <Badge
-                  variant="outline"
-                  className={cn(
-                    "ml-3 shrink-0",
-                    statusConfig[apt.status].className
-                  )}
+            {upcomingAppointments.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-8 border-2 border-dashed rounded-lg">
+                No tienes citas próximas.
+              </p>
+            ) : (
+              upcomingAppointments.map((apt) => (
+                <div
+                  key={apt.id}
+                  className="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors shadow-sm"
                 >
-                  {statusConfig[apt.status].label}
-                </Badge>
-              </div>
-            ))}
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium truncate text-foreground">
+                      {apt.clientName}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {apt.startTime} - {apt.endTime}
+                    </p>
+                  </div>
+                  <div className="text-right ml-4">
+                    <p className="text-sm font-medium">{apt.date}</p>
+                  </div>
+                  <Badge
+                    variant="outline"
+                    className={cn(
+                      "ml-3 shrink-0 px-2 py-0.5",
+                      statusConfig[apt.status as keyof typeof statusConfig]
+                        ?.className || ""
+                    )}
+                  >
+                    {statusConfig[apt.status as keyof typeof statusConfig]
+                      ?.label || apt.status}
+                  </Badge>
+                </div>
+              ))
+            )}
           </div>
         </CardContent>
       </Card>
     </div>
   );
 }
+

@@ -12,6 +12,7 @@ export class DrizzleBusinessRepository implements IBusinessRepository {
     serviceName: string;
     durationMin: number;
     description?: string | null;
+    imageUrl?: string | null;
   }): Promise<Business> {
     const [record] = await db
       .insert(businesses)
@@ -22,6 +23,7 @@ export class DrizzleBusinessRepository implements IBusinessRepository {
         serviceName: props.serviceName,
         durationMin: props.durationMin,
         description: props.description ?? null,
+        imageUrl: props.imageUrl ?? null,
       })
       .returning();
 
@@ -75,6 +77,7 @@ export class DrizzleBusinessRepository implements IBusinessRepository {
       description: string;
       serviceName: string;
       durationMin: number;
+      imageUrl: string;
     }>,
   ): Promise<Business> {
     const [record] = await db
@@ -95,6 +98,7 @@ export class DrizzleBusinessRepository implements IBusinessRepository {
       serviceName: record.serviceName,
       durationMin: record.durationMin,
       description: record.description,
+      imageUrl: record.imageUrl,
       createdAt: record.createdAt,
     });
   }

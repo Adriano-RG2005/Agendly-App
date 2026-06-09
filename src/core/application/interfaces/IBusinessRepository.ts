@@ -8,6 +8,7 @@ export interface IBusinessRepository {
     serviceName: string;
     durationMin: number;
     description?: string | null;
+    imageUrl?: string | null;
   }): Promise<Business>;
 
   findById(id: string): Promise<Business | null>;
@@ -21,6 +22,7 @@ export interface IBusinessRepository {
       description: string;
       serviceName: string;
       durationMin: number;
+      imageUrl: string;
     }>,
   ): Promise<Business>;
 }

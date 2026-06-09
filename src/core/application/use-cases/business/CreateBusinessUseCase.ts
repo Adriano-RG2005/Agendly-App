@@ -25,6 +25,7 @@ export class CreateBusinessUseCase {
       serviceName: dto.serviceName,
       durationMin: dto.durationMin,
       description: dto.description,
+      imageUrl: dto.imageUrl,
     });
   }
 

@@ -1,4 +1,4 @@
-import { eq, and } from "drizzle-orm";
+import { eq, and, gte, lte, asc } from "drizzle-orm";
 import { db } from "@infrastructure/database/client";
 import { appointments } from "@infrastructure/database/schema";
 import { Appointment, AppointmentStatus } from "@domain/entities/Appointment";
@@ -47,6 +47,41 @@ export class DrizzleAppointmentRepository implements IAppointmentRepository {
       .select()
       .from(appointments)
       .where(eq(appointments.businessId, businessId));
+
+    return records.map(this.toDomain);
+  }
+
+  async findByBusinessAndDateRange(
+    businessId: string,
+    startDate: string,
+    endDate: string,
+  ): Promise<Appointment[]> {
+    const records = await db
+      .select()
+      .from(appointments)
+      .where(
+        and(
+          eq(appointments.businessId, businessId),
+          gte(appointments.date, startDate),
+          lte(appointments.date, endDate),
+        ),
+      );
+
+    return records.map(this.toDomain);
+  }
+
+  async findUpcomingByBusiness(
+    businessId: string,
+    limit: number,
+  ): Promise<Appointment[]> {
+    const today = new Date().toISOString().split("T")[0];
+
+    const records = await db
+      .select()
+      .from(appointments)
+      .where(and(eq(appointments.businessId, businessId), gte(appointments.date, today)))
+      .orderBy(asc(appointments.date), asc(appointments.startTime))
+      .limit(limit);
 
     return records.map(this.toDomain);
   }

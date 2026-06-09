@@ -4,17 +4,19 @@ import { DrizzleBusinessRepository } from "@infrastructure/repositories/DrizzleB
 import { DrizzleAvailabilityRepository } from "@infrastructure/repositories/DrizzleAvailabilityRepository";
 import { DrizzleAppointmentRepository } from "@infrastructure/repositories/DrizzleAppointmentRepository";
 
-const userRepository = new DrizzleUserRepository();
-const businessRepository = new DrizzleBusinessRepository();
-const availabilityRepository = new DrizzleAvailabilityRepository();
-const appointmentRepository = new DrizzleAppointmentRepository();
+export const userRepository = new DrizzleUserRepository();
+export const businessRepository = new DrizzleBusinessRepository();
+export const availabilityRepository = new DrizzleAvailabilityRepository();
+export const appointmentRepository = new DrizzleAppointmentRepository();
 
 // ─── Services ────────────────────────────────────────────────────
 import { SupabaseAuthService } from "@infrastructure/services/SupabaseAuthService";
 import { ResendNotificationService } from "@infrastructure/services/ResendNotificationService";
+import { SupabaseStorageService } from "@infrastructure/services/SupabaseStorageService";
 
 const authService = new SupabaseAuthService();
 const notificationService = new ResendNotificationService();
+export const storageService = new SupabaseStorageService();
 
 // ─── Use Cases ───────────────────────────────────────────────────
 import { RegisterUseCase } from "@application/use-cases/auth/RegisterUseCase";
@@ -28,75 +30,46 @@ import { CompleteAppointmentUseCase } from "@application/use-cases/appointment/C
 import { GetBusinessAppointmentsUseCase } from "@application/use-cases/appointment/GetBusinessAppointmentsUseCase";
 import { GetPublicBusinessUseCase } from "@application/use-cases/appointment/GetPublicBusinessUseCase";
 import { SendAppointmentRemindersUseCase } from "@application/use-cases/appointment/SendAppointmentRemindersUseCase";
+import { GetDashboardDataUseCase } from "@application/use-cases/dashboard/GetDashboardDataUseCase";
 
 export const registerUseCase = new RegisterUseCase(authService, userRepository);
 export const loginUseCase = new LoginUseCase(authService);
-const createBusinessUseCase = new CreateBusinessUseCase(businessRepository);
-const updateBusinessUseCase = new UpdateBusinessUseCase(businessRepository);
-const upsertAvailabilityUseCase = new UpsertAvailabilityUseCase(
+export const getDashboardDataUseCase = new GetDashboardDataUseCase(
+  appointmentRepository,
+  businessRepository,
+);
+export const createBusinessUseCase = new CreateBusinessUseCase(businessRepository);
+export const updateBusinessUseCase = new UpdateBusinessUseCase(businessRepository);
+export const upsertAvailabilityUseCase = new UpsertAvailabilityUseCase(
   availabilityRepository,
   businessRepository,
 );
-const createAppointmentUseCase = new CreateAppointmentUseCase(
+export const createAppointmentUseCase = new CreateAppointmentUseCase(
   appointmentRepository,
   businessRepository,
   availabilityRepository,
   notificationService,
 );
-const cancelAppointmentUseCase = new CancelAppointmentUseCase(
+export const cancelAppointmentUseCase = new CancelAppointmentUseCase(
   appointmentRepository,
   businessRepository,
   notificationService,
 );
-const completeAppointmentUseCase = new CompleteAppointmentUseCase(
+export const completeAppointmentUseCase = new CompleteAppointmentUseCase(
   appointmentRepository,
   businessRepository,
 );
-const getBusinessAppointmentsUseCase = new GetBusinessAppointmentsUseCase(
+export const getBusinessAppointmentsUseCase = new GetBusinessAppointmentsUseCase(
   appointmentRepository,
   businessRepository,
 );
-const getPublicBusinessUseCase = new GetPublicBusinessUseCase(
+export const getPublicBusinessUseCase = new GetPublicBusinessUseCase(
   businessRepository,
   availabilityRepository,
   appointmentRepository,
 );
-const sendAppointmentRemindersUseCase = new SendAppointmentRemindersUseCase(
+export const sendAppointmentRemindersUseCase = new SendAppointmentRemindersUseCase(
   appointmentRepository,
   businessRepository,
   notificationService,
-);
-
-// ─── Middleware ───────────────────────────────────────────────────
-import { AuthMiddleware } from "@presentation/http/middlewares/authMiddleware";
-
-const authMiddleware = new AuthMiddleware(authService);
-
-// ─── Controllers ─────────────────────────────────────────────────
-import { AuthController } from "@presentation/http/controllers/AuthController";
-import { BusinessController } from "@presentation/http/controllers/BusinessController";
-import { AvailabilityController } from "@presentation/http/controllers/AvailabilityController";
-import { AppointmentController } from "@presentation/http/controllers/AppointmentController";
-
-export const authController = new AuthController(registerUseCase, loginUseCase);
-
-export const businessController = new BusinessController(
-  createBusinessUseCase,
-  updateBusinessUseCase,
-  authMiddleware,
-);
-
-export const availabilityController = new AvailabilityController(
-  upsertAvailabilityUseCase,
-  authMiddleware,
-);
-
-export const appointmentController = new AppointmentController(
-  createAppointmentUseCase,
-  cancelAppointmentUseCase,
-  completeAppointmentUseCase,
-  getBusinessAppointmentsUseCase,
-  getPublicBusinessUseCase,
-  sendAppointmentRemindersUseCase,
-  authMiddleware,
 );

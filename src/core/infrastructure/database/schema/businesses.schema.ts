@@ -11,6 +11,7 @@ export const businesses = pgTable("businesses", {
   description: text("description"),
   serviceName: text("service_name").notNull(),
   durationMin: integer("duration_min").notNull().default(60),
+  imageUrl: text("image_url"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

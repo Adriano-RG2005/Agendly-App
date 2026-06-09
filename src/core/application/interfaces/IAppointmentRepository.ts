@@ -13,6 +13,15 @@ export interface IAppointmentRepository {
 
   findById(id: string): Promise<Appointment | null>;
   findByBusiness(businessId: string): Promise<Appointment[]>;
+  findByBusinessAndDateRange(
+    businessId: string,
+    startDate: string,
+    endDate: string,
+  ): Promise<Appointment[]>;
+  findUpcomingByBusiness(
+    businessId: string,
+    limit: number,
+  ): Promise<Appointment[]>;
 
   isSlotTaken(props: {
     businessId: string;

@@ -9,6 +9,7 @@ export class Business {
     public readonly serviceName: string,
     public readonly durationMin: number,
     public readonly description: string | null,
+    public readonly imageUrl: string | null,
     public readonly createdAt: Date
   ) {}
 
@@ -20,6 +21,7 @@ export class Business {
     serviceName: string
     durationMin: number
     description?: string | null
+    imageUrl?: string | null
     createdAt: Date
   }): Business {
     if (!Business.isValidSlug(props.slug)) {
@@ -38,6 +40,7 @@ export class Business {
       props.serviceName.trim(),
       props.durationMin,
       props.description?.trim() ?? null,
+      props.imageUrl ?? null,
       props.createdAt
     )
   }

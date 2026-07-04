@@ -8,7 +8,7 @@ export const RegisterDTO = z.object({
 });
 
 export const LoginDTO = z.object({
-  email: z.string().email(),
+  email: z.email(),
   password: z.string().min(1),
 });
 

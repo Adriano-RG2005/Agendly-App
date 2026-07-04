@@ -4,22 +4,22 @@ export class User {
     public readonly email: string,
     public readonly name: string,
     public readonly phone: string | null,
-    public readonly createdAt: Date
+    public readonly createdAt: Date,
   ) {}
 
   static create(props: {
-    id: string
-    email: string
-    name: string
-    phone?: string | null
-    createdAt: Date
+    id: string;
+    email: string;
+    name: string;
+    phone?: string | null;
+    createdAt: Date;
   }): User {
     return new User(
       props.id,
       props.email.toLowerCase().trim(),
       props.name.trim(),
       props.phone ?? null,
-      props.createdAt
-    )
+      props.createdAt,
+    );
   }
 }

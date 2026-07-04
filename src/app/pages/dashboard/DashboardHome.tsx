@@ -6,22 +6,64 @@ import { cn } from "@/lib/utils";
 
 const stats = [
   { label: "Citas hoy", value: "3", icon: CalendarCheck, trend: "+2 vs ayer" },
-  { label: "Esta semana", value: "12", icon: TrendingUp, trend: "+5 vs semana pasada" },
+  {
+    label: "Esta semana",
+    value: "12",
+    icon: TrendingUp,
+    trend: "+5 vs semana pasada",
+  },
   { label: "Clientes únicos", value: "8", icon: Users, trend: "este mes" },
   { label: "Próxima cita", value: "10:00", icon: Clock, trend: "en 45 min" },
 ];
 
 const upcomingAppointments = [
-  { id: 1, client: "Juan Pérez", time: "10:00", date: "Hoy", service: "Terapia psicológica", status: "confirmed" as const },
-  { id: 2, client: "Ana López", time: "14:00", date: "Hoy", service: "Terapia psicológica", status: "confirmed" as const },
-  { id: 3, client: "Carlos Ruiz", time: "16:00", date: "Hoy", service: "Terapia psicológica", status: "confirmed" as const },
-  { id: 4, client: "Laura Mendoza", time: "09:00", date: "Mañana", service: "Terapia psicológica", status: "confirmed" as const },
+  {
+    id: 1,
+    client: "Juan Pérez",
+    time: "10:00",
+    date: "Hoy",
+    service: "Terapia psicológica",
+    status: "confirmed" as const,
+  },
+  {
+    id: 2,
+    client: "Ana López",
+    time: "14:00",
+    date: "Hoy",
+    service: "Terapia psicológica",
+    status: "confirmed" as const,
+  },
+  {
+    id: 3,
+    client: "Carlos Ruiz",
+    time: "16:00",
+    date: "Hoy",
+    service: "Terapia psicológica",
+    status: "confirmed" as const,
+  },
+  {
+    id: 4,
+    client: "Laura Mendoza",
+    time: "09:00",
+    date: "Mañana",
+    service: "Terapia psicológica",
+    status: "confirmed" as const,
+  },
 ];
 
 const statusConfig = {
-  confirmed: { label: "Confirmada", className: "bg-success/10 text-success border-success/20" },
-  completed: { label: "Completada", className: "bg-muted text-muted-foreground" },
-  cancelled: { label: "Cancelada", className: "bg-destructive/10 text-destructive border-destructive/20" },
+  confirmed: {
+    label: "Confirmada",
+    className: "bg-success/10 text-success border-success/20",
+  },
+  completed: {
+    label: "Completada",
+    className: "bg-muted text-muted-foreground",
+  },
+  cancelled: {
+    label: "Cancelada",
+    className: "bg-destructive/10 text-destructive border-destructive/20",
+  },
 };
 
 export default function DashboardHome() {
@@ -59,7 +101,10 @@ export default function DashboardHome() {
         <CardContent>
           <div className="space-y-3">
             {upcomingAppointments.map((apt) => (
-              <div key={apt.id} className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors">
+              <div
+                key={apt.id}
+                className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
+              >
                 <div className="flex-1 min-w-0">
                   <p className="font-medium truncate">{apt.client}</p>
                   <p className="text-sm text-muted-foreground">{apt.service}</p>
@@ -68,7 +113,13 @@ export default function DashboardHome() {
                   <p className="text-sm font-medium">{apt.time}</p>
                   <p className="text-xs text-muted-foreground">{apt.date}</p>
                 </div>
-                <Badge variant="outline" className={cn("ml-3 shrink-0", statusConfig[apt.status].className)}>
+                <Badge
+                  variant="outline"
+                  className={cn(
+                    "ml-3 shrink-0",
+                    statusConfig[apt.status].className,
+                  )}
+                >
                   {statusConfig[apt.status].label}
                 </Badge>
               </div>

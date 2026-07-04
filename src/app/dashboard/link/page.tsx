@@ -70,7 +70,9 @@ export default function MyLinkPage() {
       <Card>
         <CardHeader>
           <CardTitle>Personalizar URL</CardTitle>
-          <CardDescription>Elige un nombre único para tu página.</CardDescription>
+          <CardDescription>
+            Elige un nombre único para tu página.
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center gap-2">

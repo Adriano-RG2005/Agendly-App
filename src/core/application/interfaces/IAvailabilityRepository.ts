@@ -12,4 +12,3 @@ export interface IAvailabilityRepository {
   findByBusiness(businessId: string): Promise<Availability[]>;
   findActiveByBusiness(businessId: string): Promise<Availability[]>;
 }
-    

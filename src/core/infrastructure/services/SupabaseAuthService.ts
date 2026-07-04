@@ -9,7 +9,7 @@ export class SupabaseAuthService implements IAuthService {
     name: string;
   }): Promise<AuthUser> {
     const supabase = await createClient();
-    
+
     const { data, error } = await supabase.auth.signUp({
       email: props.email,
       password: props.password,
@@ -63,13 +63,18 @@ export class SupabaseAuthService implements IAuthService {
     // Nota: El borrado de usuarios sigue requiriendo privilegios de admin
     // En un flujo normal de SSR, esto se haría vía una API route o un service role client
     // Por ahora, lo dejamos como placeholder o implementamos un client admin si es crítico
-    console.warn("deleteUser requiere privilegios de admin y no está disponible en el flujo SSR estándar");
+    console.warn(
+      "deleteUser requiere privilegios de admin y no está disponible en el flujo SSR estándar",
+    );
   }
 
   async verifyToken(token: string): Promise<AuthUser> {
     const supabase = await createClient();
-    const { data: { user }, error } = await supabase.auth.getUser(token);
-    
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser(token);
+
     if (error || !user) throw new DomainError("INVALID_TOKEN");
 
     return {

@@ -33,7 +33,7 @@ const daysOfWeek = [
 
 const hours = Array.from(
   { length: 24 },
-  (_, i) => `${i.toString().padStart(2, "0")}:00`
+  (_, i) => `${i.toString().padStart(2, "0")}:00`,
 );
 
 interface AvailabilityFormProps {
@@ -42,27 +42,36 @@ interface AvailabilityFormProps {
   initialData: any[];
 }
 
-export default function AvailabilityForm({ userId, businessId, initialData }: AvailabilityFormProps) {
+export default function AvailabilityForm({
+  userId,
+  businessId,
+  initialData,
+}: AvailabilityFormProps) {
   const [isLoading, setIsLoading] = useState(false);
-  
+
   // Mapear datos iniciales o usar valores por defecto
   const [schedule, setSchedule] = useState(() => {
-    const baseSchedule: Record<number, { active: boolean; start: string; end: string }> = {};
-    
+    const baseSchedule: Record<
+      number,
+      { active: boolean; start: string; end: string }
+    > = {};
+
     // Inicializar con valores por defecto
-    [0, 1, 2, 3, 4, 5, 6].forEach(day => {
-      const existing = initialData.find(d => d.dayOfWeek === day);
-      baseSchedule[day] = existing ? {
-        active: existing.isActive,
-        start: existing.startTime,
-        end: existing.endTime
-      } : {
-        active: day !== 0 && day !== 6, // Lunes a viernes activo por defecto
-        start: "09:00",
-        end: "17:00"
-      };
+    [0, 1, 2, 3, 4, 5, 6].forEach((day) => {
+      const existing = initialData.find((d) => d.dayOfWeek === day);
+      baseSchedule[day] = existing
+        ? {
+            active: existing.isActive,
+            start: existing.startTime,
+            end: existing.endTime,
+          }
+        : {
+            active: day !== 0 && day !== 6, // Lunes a viernes activo por defecto
+            start: "09:00",
+            end: "17:00",
+          };
     });
-    
+
     return baseSchedule;
   });
 
@@ -73,7 +82,11 @@ export default function AvailabilityForm({ userId, businessId, initialData }: Av
     }));
   };
 
-  const updateTime = (dayKey: number, field: "start" | "end", value: string) => {
+  const updateTime = (
+    dayKey: number,
+    field: "start" | "end",
+    value: string,
+  ) => {
     setSchedule((prev) => ({
       ...prev,
       [dayKey]: { ...prev[dayKey], [field]: value },

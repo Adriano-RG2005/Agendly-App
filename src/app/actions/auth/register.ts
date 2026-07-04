@@ -3,17 +3,17 @@
 import { registerUseCase } from "@/core/container";
 import { RegisterDTO } from "@application/dtos/auth.dto";
 import { DomainError } from "@domain/errors";
+import { z } from "zod";
 
 export async function registerAction(formData: RegisterDTO) {
   try {
-    // Validamos los datos con el DTO
     const parsed = RegisterDTO.safeParse(formData);
 
     if (!parsed.success) {
       return {
         success: false,
         error: "Datos inválidos",
-        details: parsed.error.format(),
+        details: z.treeifyError(parsed.error),
       };
     }
 

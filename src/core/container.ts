@@ -38,8 +38,12 @@ export const getDashboardDataUseCase = new GetDashboardDataUseCase(
   appointmentRepository,
   businessRepository,
 );
-export const createBusinessUseCase = new CreateBusinessUseCase(businessRepository);
-export const updateBusinessUseCase = new UpdateBusinessUseCase(businessRepository);
+export const createBusinessUseCase = new CreateBusinessUseCase(
+  businessRepository,
+);
+export const updateBusinessUseCase = new UpdateBusinessUseCase(
+  businessRepository,
+);
 export const upsertAvailabilityUseCase = new UpsertAvailabilityUseCase(
   availabilityRepository,
   businessRepository,
@@ -59,17 +63,16 @@ export const completeAppointmentUseCase = new CompleteAppointmentUseCase(
   appointmentRepository,
   businessRepository,
 );
-export const getBusinessAppointmentsUseCase = new GetBusinessAppointmentsUseCase(
-  appointmentRepository,
-  businessRepository,
-);
+export const getBusinessAppointmentsUseCase =
+  new GetBusinessAppointmentsUseCase(appointmentRepository, businessRepository);
 export const getPublicBusinessUseCase = new GetPublicBusinessUseCase(
   businessRepository,
   availabilityRepository,
   appointmentRepository,
 );
-export const sendAppointmentRemindersUseCase = new SendAppointmentRemindersUseCase(
-  appointmentRepository,
-  businessRepository,
-  notificationService,
-);
+export const sendAppointmentRemindersUseCase =
+  new SendAppointmentRemindersUseCase(
+    appointmentRepository,
+    businessRepository,
+    notificationService,
+  );

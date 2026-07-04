@@ -1,4 +1,4 @@
-import { ValidationError } from "@domain/errors"
+import { ValidationError } from "@domain/errors";
 
 export class Business {
   private constructor(
@@ -10,26 +10,28 @@ export class Business {
     public readonly durationMin: number,
     public readonly description: string | null,
     public readonly imageUrl: string | null,
-    public readonly createdAt: Date
+    public readonly createdAt: Date,
   ) {}
 
   static create(props: {
-    id: string
-    userId: string
-    name: string
-    slug: string
-    serviceName: string
-    durationMin: number
-    description?: string | null
-    imageUrl?: string | null
-    createdAt: Date
+    id: string;
+    userId: string;
+    name: string;
+    slug: string;
+    serviceName: string;
+    durationMin: number;
+    description?: string | null;
+    imageUrl?: string | null;
+    createdAt: Date;
   }): Business {
     if (!Business.isValidSlug(props.slug)) {
-      throw new ValidationError('Slug must be lowercase letters, numbers and hyphens only')
+      throw new ValidationError(
+        "Slug must be lowercase letters, numbers and hyphens only",
+      );
     }
 
     if (props.durationMin < 15 || props.durationMin > 480) {
-      throw new ValidationError('Duration must be between 15 and 480 minutes')
+      throw new ValidationError("Duration must be between 15 and 480 minutes");
     }
 
     return new Business(
@@ -41,22 +43,22 @@ export class Business {
       props.durationMin,
       props.description?.trim() ?? null,
       props.imageUrl ?? null,
-      props.createdAt
-    )
+      props.createdAt,
+    );
   }
 
   static generateSlug(name: string): string {
     return name
       .toLowerCase()
       .trim()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '') // elimina acentos
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "") // elimina acentos
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-");
   }
 
   private static isValidSlug(slug: string): boolean {
-    return /^[a-z0-9-]+$/.test(slug)
+    return /^[a-z0-9-]+$/.test(slug);
   }
 }

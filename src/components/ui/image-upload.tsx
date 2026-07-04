@@ -23,7 +23,9 @@ export function ImageUpload({
   previewUrl,
 }: ImageUploadProps) {
   const [isDragging, setIsDragging] = React.useState(false);
-  const [localPreview, setLocalPreview] = React.useState<string | undefined>(previewUrl);
+  const [localPreview, setLocalPreview] = React.useState<string | undefined>(
+    previewUrl,
+  );
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const onDragOver = React.useCallback((e: React.DragEvent) => {
@@ -58,7 +60,7 @@ export function ImageUpload({
         handleUpload(file);
       }
     },
-    [disabled]
+    [disabled],
   );
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,11 +85,17 @@ export function ImageUpload({
         onDrop={onDrop}
         className={cn(
           "relative border-2 border-dashed rounded-lg p-4 transition-all duration-200 flex flex-col items-center justify-center min-h-[150px] cursor-pointer",
-          isDragging ? "border-primary bg-primary/5" : "border-muted-foreground/25",
-          disabled ? "opacity-50 cursor-not-allowed" : "hover:border-primary/50",
-          localPreview || value ? "p-0 overflow-hidden" : ""
+          isDragging
+            ? "border-primary bg-primary/5"
+            : "border-muted-foreground/25",
+          disabled
+            ? "opacity-50 cursor-not-allowed"
+            : "hover:border-primary/50",
+          localPreview || value ? "p-0 overflow-hidden" : "",
         )}
-        onClick={() => !disabled && !(localPreview || value) && fileInputRef.current?.click()}
+        onClick={() =>
+          !disabled && !(localPreview || value) && fileInputRef.current?.click()
+        }
       >
         <input
           type="file"
@@ -98,7 +106,7 @@ export function ImageUpload({
           disabled={disabled}
         />
 
-        {(localPreview || value) ? (
+        {localPreview || value ? (
           <div className="relative aspect-square w-full max-w-[200px]">
             <img
               src={localPreview || value}

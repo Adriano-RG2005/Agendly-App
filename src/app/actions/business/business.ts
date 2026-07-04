@@ -5,7 +5,10 @@ import {
   updateBusinessUseCase,
   storageService,
 } from "@/core/container";
-import { CreateBusinessDTO, UpdateBusinessDTO } from "@application/dtos/business.dto";
+import {
+  CreateBusinessDTO,
+  UpdateBusinessDTO,
+} from "@application/dtos/business.dto";
 import { DomainError } from "@domain/errors";
 import { revalidatePath } from "next/cache";
 
@@ -13,7 +16,7 @@ export async function saveBusinessAction(
   userId: string,
   businessId: string | undefined,
   data: any,
-  imageFormData?: FormData
+  imageFormData?: FormData,
 ) {
   try {
     let imageUrl: string | undefined = data.imageUrl;
@@ -39,7 +42,11 @@ export async function saveBusinessAction(
     } else {
       // Actualizar negocio
       const dto = UpdateBusinessDTO.parse({ ...data, imageUrl });
-      const business = await updateBusinessUseCase.execute(businessId, userId, dto);
+      const business = await updateBusinessUseCase.execute(
+        businessId,
+        userId,
+        dto,
+      );
       revalidatePath("/dashboard");
       return { success: true, data: business };
     }
@@ -48,6 +55,9 @@ export async function saveBusinessAction(
     if (error instanceof DomainError) {
       return { success: false, error: error.message };
     }
-    return { success: false, error: error.message || "Error al guardar el negocio" };
+    return {
+      success: false,
+      error: error.message || "Error al guardar el negocio",
+    };
   }
 }

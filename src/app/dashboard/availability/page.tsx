@@ -17,7 +17,13 @@ export default async function AvailabilityPage() {
   const business = await businessRepository.findByUserId(user.id);
 
   if (!business) {
-    return <NoBusinessView userName={user.user_metadata?.name || user.email?.split("@")[0] || "Usuario"} />;
+    return (
+      <NoBusinessView
+        userName={
+          user.user_metadata?.name || user.email?.split("@")[0] || "Usuario"
+        }
+      />
+    );
   }
 
   const availability = await availabilityRepository.findByBusiness(business.id);
@@ -25,11 +31,11 @@ export default async function AvailabilityPage() {
   return (
     <div className="space-y-6 animate-fade-in max-w-2xl">
       <h1 className="text-2xl font-bold">Disponibilidad</h1>
-      
-      <AvailabilityForm 
-        userId={user.id} 
-        businessId={business.id} 
-        initialData={availability} 
+
+      <AvailabilityForm
+        userId={user.id}
+        businessId={business.id}
+        initialData={availability}
       />
     </div>
   );

@@ -1,12 +1,12 @@
-import { Section, Text, Row, Column } from '@react-email/components'
-import { BaseLayout } from './components/BaseLayout'
+import { Section, Text, Row, Column } from "@react-email/components";
+import { BaseLayout } from "./components/BaseLayout";
 
 interface AppointmentReminderProps {
-  clientName: string
-  businessName: string
-  serviceName: string
-  date: string
-  startTime: string
+  clientName: string;
+  businessName: string;
+  serviceName: string;
+  date: string;
+  startTime: string;
 }
 
 export function AppointmentReminder({
@@ -23,8 +23,8 @@ export function AppointmentReminder({
       </Text>
 
       <Text className="text-gray-600">
-        Hola <strong>{clientName}</strong>, te recordamos que mañana tienes
-        una cita con <strong>{businessName}</strong>.
+        Hola <strong>{clientName}</strong>, te recordamos que mañana tienes una
+        cita con <strong>{businessName}</strong>.
       </Text>
 
       <Section className="bg-gray-50 rounded-lg p-4 my-4">
@@ -52,7 +52,7 @@ export function AppointmentReminder({
         ¡Te esperamos! Si necesitas cancelar, responde a este email.
       </Text>
     </BaseLayout>
-  )
+  );
 }
 
-export default AppointmentReminder
+export default AppointmentReminder;

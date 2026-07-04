@@ -58,7 +58,10 @@ export default function Register() {
       </div>
       <Card className="w-full max-w-md animate-fade-in">
         <CardHeader className="text-center">
-          <Link href="/" className="flex items-center justify-center gap-2 mb-4">
+          <Link
+            href="/"
+            className="flex items-center justify-center gap-2 mb-4"
+          >
             <CalendarCheck className="h-8 w-8 text-primary" />
             <span className="text-2xl font-bold">Agendly</span>
           </Link>
@@ -78,7 +81,9 @@ export default function Register() {
                 className={errors.name ? "border-destructive" : ""}
               />
               {errors.name && (
-                <p className="text-xs text-destructive">{errors.name.message}</p>
+                <p className="text-xs text-destructive">
+                  {errors.name.message}
+                </p>
               )}
             </div>
             <div className="space-y-2">
@@ -91,7 +96,9 @@ export default function Register() {
                 className={errors.email ? "border-destructive" : ""}
               />
               {errors.email && (
-                <p className="text-xs text-destructive">{errors.email.message}</p>
+                <p className="text-xs text-destructive">
+                  {errors.email.message}
+                </p>
               )}
             </div>
             <div className="space-y-2">

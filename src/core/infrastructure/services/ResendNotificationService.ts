@@ -1,20 +1,20 @@
-import { resend } from '@infrastructure/lib/resend'
-import { INotificationService } from '@application/interfaces/INotificationService'
-import { Appointment } from '@domain/entities/Appointment'
-import { Business } from '@domain/entities/Business'
-import { AppointmentConfirmation } from '@emails/AppointmentConfirmation'
-import { AppointmentReminder } from '@emails/AppointmentReminder'
-import { AppointmentCancellation } from '@emails/AppointmentCancellation'
-import { render } from 'react-email'
+import { resend } from "@infrastructure/lib/resend";
+import { INotificationService } from "@application/interfaces/INotificationService";
+import { Appointment } from "@domain/entities/Appointment";
+import { Business } from "@domain/entities/Business";
+import { AppointmentConfirmation } from "@emails/AppointmentConfirmation";
+import { AppointmentReminder } from "@emails/AppointmentReminder";
+import { AppointmentCancellation } from "@emails/AppointmentCancellation";
+import { render } from "react-email";
 
 export class ResendNotificationService implements INotificationService {
-  private readonly fromEmail = 'Agendly <noreply@agendly.app>'
+  private readonly fromEmail = "Agendly <noreply@agendly.app>";
 
   async sendConfirmation(props: {
-    appointment: Appointment
-    business: Business
+    appointment: Appointment;
+    business: Business;
   }): Promise<void> {
-    const { appointment, business } = props
+    const { appointment, business } = props;
 
     const html = await render(
       AppointmentConfirmation({
@@ -23,22 +23,22 @@ export class ResendNotificationService implements INotificationService {
         serviceName: business.serviceName,
         date: appointment.date,
         startTime: appointment.startTime,
-      })
-    )
+      }),
+    );
 
     await resend.emails.send({
       from: this.fromEmail,
       to: appointment.clientEmail,
       subject: `Cita confirmada con ${business.name}`,
       html,
-    })
+    });
   }
 
   async sendReminder(props: {
-    appointment: Appointment
-    business: Business
+    appointment: Appointment;
+    business: Business;
   }): Promise<void> {
-    const { appointment, business } = props
+    const { appointment, business } = props;
 
     const html = await render(
       AppointmentReminder({
@@ -47,22 +47,22 @@ export class ResendNotificationService implements INotificationService {
         serviceName: business.serviceName,
         date: appointment.date,
         startTime: appointment.startTime,
-      })
-    )
+      }),
+    );
 
     await resend.emails.send({
       from: this.fromEmail,
       to: appointment.clientEmail,
       subject: `Recordatorio: tu cita mañana con ${business.name}`,
       html,
-    })
+    });
   }
 
   async sendCancellation(props: {
-    appointment: Appointment
-    business: Business
+    appointment: Appointment;
+    business: Business;
   }): Promise<void> {
-    const { appointment, business } = props
+    const { appointment, business } = props;
 
     const html = await render(
       AppointmentCancellation({
@@ -72,14 +72,14 @@ export class ResendNotificationService implements INotificationService {
         date: appointment.date,
         startTime: appointment.startTime,
         businessSlug: business.slug,
-      })
-    )
+      }),
+    );
 
     await resend.emails.send({
       from: this.fromEmail,
       to: appointment.clientEmail,
       subject: `Tu cita con ${business.name} fue cancelada`,
       html,
-    })
+    });
   }
 }

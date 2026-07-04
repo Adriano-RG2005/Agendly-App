@@ -3,6 +3,7 @@
 import { loginUseCase } from "@/core/container";
 import { LoginDTO } from "@application/dtos/auth.dto";
 import { DomainError } from "@domain/errors";
+import { z } from "zod";
 
 export async function loginAction(formData: LoginDTO) {
   try {
@@ -12,7 +13,7 @@ export async function loginAction(formData: LoginDTO) {
       return {
         success: false,
         error: "Datos inválidos",
-        details: parsed.error.format(),
+        details: z.treeifyError(parsed.error),
       };
     }
 

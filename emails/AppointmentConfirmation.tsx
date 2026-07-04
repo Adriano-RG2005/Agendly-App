@@ -1,12 +1,12 @@
-import { Section, Text, Row, Column } from '@react-email/components'
-import { BaseLayout } from './components/BaseLayout'
+import { Section, Text, Row, Column } from "@react-email/components";
+import { BaseLayout } from "./components/BaseLayout";
 
 interface AppointmentConfirmationProps {
-  clientName: string
-  businessName: string
-  serviceName: string
-  date: string
-  startTime: string
+  clientName: string;
+  businessName: string;
+  serviceName: string;
+  date: string;
+  startTime: string;
 }
 
 export function AppointmentConfirmation({
@@ -23,7 +23,7 @@ export function AppointmentConfirmation({
       </Text>
 
       <Text className="text-gray-600">
-        Hola <strong>{clientName}</strong>, tu cita con{' '}
+        Hola <strong>{clientName}</strong>, tu cita con{" "}
         <strong>{businessName}</strong> ha sido agendada exitosamente.
       </Text>
 
@@ -52,7 +52,7 @@ export function AppointmentConfirmation({
         Si necesitas cancelar o reagendar, responde a este email.
       </Text>
     </BaseLayout>
-  )
+  );
 }
 
-export default AppointmentConfirmation
+export default AppointmentConfirmation;

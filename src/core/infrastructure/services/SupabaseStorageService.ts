@@ -4,9 +4,7 @@ import { SupabaseClient } from "@supabase/supabase-js";
 export class SupabaseStorageService implements IStorageService {
   private bucketName = "business";
 
-  constructor(
-    private readonly storage: SupabaseClient["storage"]
-  ) {}
+  constructor(private readonly storage: SupabaseClient["storage"]) {}
 
   async uploadFile(path: string, file: File): Promise<string> {
     const { data, error } = await this.storage
@@ -24,9 +22,7 @@ export class SupabaseStorageService implements IStorageService {
   }
 
   async deleteFile(path: string): Promise<void> {
-    const { error } = await this.storage
-      .from(this.bucketName)
-      .remove([path]);
+    const { error } = await this.storage.from(this.bucketName).remove([path]);
 
     if (error) {
       throw new Error(`Error deleting file: ${error.message}`);
@@ -34,9 +30,7 @@ export class SupabaseStorageService implements IStorageService {
   }
 
   getFileUrl(path: string): string {
-    const { data } = this.storage
-      .from(this.bucketName)
-      .getPublicUrl(path);
+    const { data } = this.storage.from(this.bucketName).getPublicUrl(path);
 
     return data.publicUrl;
   }

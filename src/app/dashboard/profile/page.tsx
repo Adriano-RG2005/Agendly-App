@@ -19,17 +19,21 @@ export default async function BusinessProfilePage() {
   return (
     <div className="space-y-6 animate-fade-in max-w-2xl">
       <h1 className="text-2xl font-bold">Perfil del negocio</h1>
-      
-      <BusinessProfileForm 
-        userId={user.id} 
-        initialData={business ? {
-          id: business.id,
-          name: business.name,
-          serviceName: business.serviceName,
-          durationMin: business.durationMin,
-          description: business.description,
-          slug: business.slug
-        } : null} 
+
+      <BusinessProfileForm
+        userId={user.id}
+        initialData={
+          business
+            ? {
+                id: business.id,
+                name: business.name,
+                serviceName: business.serviceName,
+                durationMin: business.durationMin,
+                description: business.description,
+                slug: business.slug,
+              }
+            : null
+        }
       />
     </div>
   );

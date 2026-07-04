@@ -26,22 +26,27 @@ export class GetDashboardDataUseCase {
 
     const today = new Date();
     const todayStr = format(today, "yyyy-MM-dd");
-    const weekStart = format(startOfWeek(today, { weekStartsOn: 1 }), "yyyy-MM-dd");
+    const weekStart = format(
+      startOfWeek(today, { weekStartsOn: 1 }),
+      "yyyy-MM-dd",
+    );
     const weekEnd = format(endOfWeek(today, { weekStartsOn: 1 }), "yyyy-MM-dd");
 
     // 1. Citas de hoy
-    const todayAppointments = await this.appointmentRepository.findByBusinessAndDateRange(
-      business.id,
-      todayStr,
-      todayStr,
-    );
+    const todayAppointments =
+      await this.appointmentRepository.findByBusinessAndDateRange(
+        business.id,
+        todayStr,
+        todayStr,
+      );
 
     // 2. Citas de la semana
-    const weekAppointments = await this.appointmentRepository.findByBusinessAndDateRange(
-      business.id,
-      weekStart,
-      weekEnd,
-    );
+    const weekAppointments =
+      await this.appointmentRepository.findByBusinessAndDateRange(
+        business.id,
+        weekStart,
+        weekEnd,
+      );
 
     // 3. Próximas citas (para la lista y para el stat de próxima cita)
     const upcoming = await this.appointmentRepository.findUpcomingByBusiness(
@@ -53,13 +58,15 @@ export class GetDashboardDataUseCase {
     const allAppointments = await this.appointmentRepository.findByBusiness(
       business.id,
     );
-    const uniqueClients = new Set(allAppointments.map((a) => a.clientEmail)).size;
+    const uniqueClients = new Set(allAppointments.map((a) => a.clientEmail))
+      .size;
 
     // Calcular próxima cita
     const nextApt = upcoming.find(
       (a) =>
         a.status === "pending" &&
-        (a.date > todayStr || (a.date === todayStr && a.startTime > format(today, "HH:mm"))),
+        (a.date > todayStr ||
+          (a.date === todayStr && a.startTime > format(today, "HH:mm"))),
     );
 
     return {

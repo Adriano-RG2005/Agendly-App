@@ -1,12 +1,7 @@
 import Link from "next/link";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface NoBusinessViewProps {
   userName: string;
@@ -24,14 +19,16 @@ export default function NoBusinessView({ userName }: NoBusinessViewProps) {
         <CardHeader>
           <div className="flex items-center gap-2 text-primary">
             <AlertCircle className="h-5 w-5" />
-            <CardTitle className="text-lg font-semibold">Configuración pendiente</CardTitle>
+            <CardTitle className="text-lg font-semibold">
+              Configuración pendiente
+            </CardTitle>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Para comenzar a recibir reservas, primero debes configurar tu
-            perfil de negocio y tu disponibilidad. Esto permitirá que tus
-            clientes vean tus servicios y agenden citas.
+            Para comenzar a recibir reservas, primero debes configurar tu perfil
+            de negocio y tu disponibilidad. Esto permitirá que tus clientes vean
+            tus servicios y agenden citas.
           </p>
           <Button asChild size="lg" className="w-full sm:w-auto shadow-sm">
             <Link href="/dashboard/profile">Configurar mi negocio</Link>

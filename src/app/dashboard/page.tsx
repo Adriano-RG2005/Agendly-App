@@ -114,7 +114,9 @@ export default async function DashboardPage() {
       {/* Upcoming */}
       <Card className="shadow-sm">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-lg font-semibold">Próximas citas</CardTitle>
+          <CardTitle className="text-lg font-semibold">
+            Próximas citas
+          </CardTitle>
           <Button variant="outline" size="sm" asChild className="font-medium">
             <Link href="/dashboard/appointments">Ver todas</Link>
           </Button>
@@ -147,7 +149,7 @@ export default async function DashboardPage() {
                     className={cn(
                       "ml-3 shrink-0 px-2 py-0.5",
                       statusConfig[apt.status as keyof typeof statusConfig]
-                        ?.className || ""
+                        ?.className || "",
                     )}
                   >
                     {statusConfig[apt.status as keyof typeof statusConfig]
@@ -162,4 +164,3 @@ export default async function DashboardPage() {
     </div>
   );
 }
-

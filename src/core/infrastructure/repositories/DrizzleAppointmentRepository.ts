@@ -79,7 +79,12 @@ export class DrizzleAppointmentRepository implements IAppointmentRepository {
     const records = await db
       .select()
       .from(appointments)
-      .where(and(eq(appointments.businessId, businessId), gte(appointments.date, today)))
+      .where(
+        and(
+          eq(appointments.businessId, businessId),
+          gte(appointments.date, today),
+        ),
+      )
       .orderBy(asc(appointments.date), asc(appointments.startTime))
       .limit(limit);
 

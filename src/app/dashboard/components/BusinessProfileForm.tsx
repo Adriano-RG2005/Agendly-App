@@ -61,12 +61,12 @@ export default function BusinessProfileForm({
         userId,
         initialData?.id,
         data,
-        imageFormData
+        imageFormData,
       );
 
       if (result.success) {
         toast.success(
-          initialData ? "Perfil actualizado" : "Negocio creado correctamente"
+          initialData ? "Perfil actualizado" : "Negocio creado correctamente",
         );
         setImageFile(null);
       } else {

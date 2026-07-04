@@ -1,13 +1,13 @@
-import { Section, Text, Row, Column } from '@react-email/components'
-import { BaseLayout } from './components/BaseLayout'
+import { Section, Text, Row, Column } from "@react-email/components";
+import { BaseLayout } from "./components/BaseLayout";
 
 interface AppointmentCancellationProps {
-  clientName: string
-  businessName: string
-  serviceName: string
-  date: string
-  startTime: string
-  businessSlug: string
+  clientName: string;
+  businessName: string;
+  serviceName: string;
+  date: string;
+  startTime: string;
+  businessSlug: string;
 }
 
 export function AppointmentCancellation({
@@ -18,7 +18,7 @@ export function AppointmentCancellation({
   startTime,
   businessSlug,
 }: AppointmentCancellationProps) {
-  const bookingUrl = `${process.env.NEXT_PUBLIC_APP_URL}/${businessSlug}`
+  const bookingUrl = `${process.env.NEXT_PUBLIC_APP_URL}/${businessSlug}`;
 
   return (
     <BaseLayout preview={`Tu cita con ${businessName} fue cancelada`}>
@@ -27,7 +27,7 @@ export function AppointmentCancellation({
       </Text>
 
       <Text className="text-gray-600">
-        Hola <strong>{clientName}</strong>, tu cita con{' '}
+        Hola <strong>{clientName}</strong>, tu cita con{" "}
         <strong>{businessName}</strong> ha sido cancelada.
       </Text>
 
@@ -53,14 +53,14 @@ export function AppointmentCancellation({
       </Section>
 
       <Text className="text-gray-500 text-sm">
-        Si deseas reagendar puedes hacerlo desde{' '}
+        Si deseas reagendar puedes hacerlo desde{" "}
         <a href={bookingUrl} className="text-indigo-600">
           aquí
         </a>
         .
       </Text>
     </BaseLayout>
-  )
+  );
 }
 
-export default AppointmentCancellation
+export default AppointmentCancellation;

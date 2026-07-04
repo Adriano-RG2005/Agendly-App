@@ -7,11 +7,11 @@ import {
   Section,
   Tailwind,
   Text,
-} from '@react-email/components'
+} from "@react-email/components";
 
 interface BaseLayoutProps {
-  preview: string
-  children: React.ReactNode
+  preview: string;
+  children: React.ReactNode;
 }
 
 export function BaseLayout({ preview, children }: BaseLayoutProps) {
@@ -30,12 +30,13 @@ export function BaseLayout({ preview, children }: BaseLayoutProps) {
             {children}
             <Section className="mt-8 border-t border-gray-100 pt-4">
               <Text className="text-xs text-gray-400 text-center m-0">
-                © {new Date().getFullYear()} Agendly. Todos los derechos reservados.
+                © {new Date().getFullYear()} Agendly. Todos los derechos
+                reservados.
               </Text>
             </Section>
           </Container>
         </Body>
       </Tailwind>
     </Html>
-  )
+  );
 }

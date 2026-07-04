@@ -133,7 +133,7 @@ function AppointmentCard({ apt }: { apt: Appointment }) {
             variant="outline"
             className={cn(
               "shrink-0 text-xs",
-              statusConfig[apt.status].className
+              statusConfig[apt.status].className,
             )}
           >
             {statusConfig[apt.status].label}
@@ -222,7 +222,7 @@ export default function AppointmentsPage() {
                   .map((apt) => <AppointmentCard key={apt.id} apt={apt} />)
               )}
             </TabsContent>
-          )
+          ),
         )}
       </Tabs>
     </div>

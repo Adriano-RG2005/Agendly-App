@@ -5,7 +5,7 @@ import { INotificationService } from "@application/interfaces/INotificationServi
 import { CreateAppointmentDTO } from "@application/dtos/appointment.dto";
 import { Appointment } from "@domain/entities/Appointment";
 import { addMinutes, format } from "date-fns";
-import { ConflictError, NotFoundError, ValidationError } from "@domain/errors";
+import { GenericErrors, BusinessErrors, AppointmentErrors } from "@/core/domain/errors";
 
 export class CreateAppointmentUseCase {
   constructor(
@@ -17,9 +17,8 @@ export class CreateAppointmentUseCase {
 
   async execute(dto: CreateAppointmentDTO): Promise<Appointment> {
     const business = await this.businessRepository.findBySlug(dto.businessSlug);
-    if (!business) throw new NotFoundError("Business");
+    if (!business) throw new BusinessErrors.NotFound();
 
-    // Verificar que el día tiene disponibilidad activa
     const date = new Date(dto.date);
     const dayOfWeek = (date.getDay() + 6) % 7;
     const availability = await this.availabilityRepository.findActiveByBusiness(
@@ -28,23 +27,23 @@ export class CreateAppointmentUseCase {
     const dayAvail = availability.find((a) => a.dayOfWeek === dayOfWeek);
 
     if (!dayAvail)
-      throw new ValidationError("Business is not available on this day");
+      throw new GenericErrors.ValidationFailed(
+        undefined,
+        "Business is not available on this day",
+      );
 
-    // Verificar que el slot está dentro del horario
     const slots = dayAvail.getSlots(business.durationMin);
     if (!slots.includes(dto.startTime)) {
-      throw new ValidationError("Invalid time slot");
+      throw new GenericErrors.ValidationFailed(undefined, "Invalid time slot");
     }
 
-    // Verificar que el slot no está tomado
     const taken = await this.appointmentRepository.isSlotTaken({
       businessId: business.id,
       date: dto.date,
       startTime: dto.startTime,
     });
-    if (taken) throw new ConflictError("This slot is already taken");
+    if (taken) throw new AppointmentErrors.TimeSlotUnavailable();
 
-    // Calcular endTime
     const [h, m] = dto.startTime.split(":").map(Number);
     const start = new Date(2000, 0, 1, h, m);
     const end = addMinutes(start, business.durationMin);

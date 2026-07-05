@@ -1,6 +1,14 @@
 import { createClient } from "@infrastructure/lib/supabase/server";
 import { IAuthService, AuthUser } from "@application/interfaces/IAuthService";
-import { DomainError } from "@domain/errors/DomainError";
+import { AuthErrors } from "@/core/domain/errors";
+
+// Supabase Auth error codes reference: https://supabase.com/docs/reference/javascript/auth-api-error-codes
+const SUPABASE_ERROR_CODES = {
+  EMAIL_NOT_CONFIRMED: "email_not_confirmed",
+  INVALID_CREDENTIALS: "invalid_credentials",
+  USER_NOT_FOUND: "user_not_found",
+  EMAIL_ALREADY_EXISTS: "email_already_exists",
+};
 
 export class SupabaseAuthService implements IAuthService {
   async signUp(props: {
@@ -21,13 +29,17 @@ export class SupabaseAuthService implements IAuthService {
     });
 
     if (error) {
-      if (error.message.includes("already registered")) {
-        throw new DomainError("EMAIL_ALREADY_EXISTS");
+      if (
+        error.message?.includes("already registered") ||
+        error.code === SUPABASE_ERROR_CODES.EMAIL_ALREADY_EXISTS
+      ) {
+        throw new AuthErrors.EmailAlreadyExists();
       }
-      throw new DomainError("AUTH_ERROR", error.message);
+      console.error("Supabase signUp error:", error);
+      throw new AuthErrors.AuthFailed();
     }
 
-    if (!data.user) throw new DomainError("AUTH_ERROR");
+    if (!data.user) throw new AuthErrors.AuthFailed();
 
     return {
       id: data.user.id,
@@ -46,8 +58,24 @@ export class SupabaseAuthService implements IAuthService {
       password: props.password,
     });
 
-    if (error || !data.user || !data.session) {
-      throw new DomainError("INVALID_CREDENTIALS");
+    console.log(SupabaseAuthService.name, { data, error });
+
+    if (error) {
+      if (error.code === SUPABASE_ERROR_CODES.EMAIL_NOT_CONFIRMED) {
+        throw new AuthErrors.EmailNotConfirmed();
+      }
+      if (
+        error.code === SUPABASE_ERROR_CODES.INVALID_CREDENTIALS ||
+        error.code === SUPABASE_ERROR_CODES.USER_NOT_FOUND
+      ) {
+        throw new AuthErrors.InvalidCredentials();
+      }
+      console.error("Supabase signIn error:", error);
+      throw new AuthErrors.AuthFailed();
+    }
+
+    if (!data.user || !data.session) {
+      throw new AuthErrors.InvalidCredentials();
     }
 
     return {
@@ -60,9 +88,6 @@ export class SupabaseAuthService implements IAuthService {
   }
 
   async deleteUser(id: string): Promise<void> {
-    // Nota: El borrado de usuarios sigue requiriendo privilegios de admin
-    // En un flujo normal de SSR, esto se haría vía una API route o un service role client
-    // Por ahora, lo dejamos como placeholder o implementamos un client admin si es crítico
     console.warn(
       "deleteUser requiere privilegios de admin y no está disponible en el flujo SSR estándar",
     );
@@ -75,7 +100,7 @@ export class SupabaseAuthService implements IAuthService {
       error,
     } = await supabase.auth.getUser(token);
 
-    if (error || !user) throw new DomainError("INVALID_TOKEN");
+    if (error || !user) throw new AuthErrors.InvalidToken();
 
     return {
       id: user.id,

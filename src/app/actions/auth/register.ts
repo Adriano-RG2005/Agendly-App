@@ -2,8 +2,8 @@
 
 import { registerUseCase } from "@/core/container";
 import { RegisterDTO } from "@application/dtos/auth.dto";
-import { DomainError } from "@domain/errors";
 import { z } from "zod";
+import { getUserFriendlyMessage } from "@/lib/errors";
 
 export async function registerAction(formData: RegisterDTO) {
   try {
@@ -12,7 +12,7 @@ export async function registerAction(formData: RegisterDTO) {
     if (!parsed.success) {
       return {
         success: false,
-        error: "Datos inválidos",
+        error: getUserFriendlyMessage("GENERIC_VALIDATION_FAILED"),
         details: z.treeifyError(parsed.error),
       };
     }
@@ -28,17 +28,10 @@ export async function registerAction(formData: RegisterDTO) {
       },
     };
   } catch (error) {
-    if (error instanceof DomainError) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
-
     console.error("Registration Action Error:", error);
     return {
       success: false,
-      error: "Error interno del servidor",
+      error: getUserFriendlyMessage(error),
     };
   }
 }

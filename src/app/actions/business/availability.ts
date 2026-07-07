@@ -3,7 +3,7 @@
 import { upsertAvailabilityUseCase } from "@/core/container";
 import { UpsertAvailabilityDTO } from "@application/dtos/availability.dto";
 import { revalidatePath } from "next/cache";
-import { getUserFriendlyMessage } from "@/lib/errors";
+import { getErrorMessage } from "@/lib/errors";
 
 export async function saveAvailabilityAction(
   userId: string,
@@ -19,7 +19,7 @@ export async function saveAvailabilityAction(
     console.error("Save Availability Action Error:", error);
     return {
       success: false,
-      error: getUserFriendlyMessage(error),
+      error: getErrorMessage(error),
     };
   }
 }

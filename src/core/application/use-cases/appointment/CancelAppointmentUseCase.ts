@@ -2,7 +2,11 @@ import { IAppointmentRepository } from "@application/interfaces/IAppointmentRepo
 import { IBusinessRepository } from "@application/interfaces/IBusinessRepository";
 import { INotificationService } from "@application/interfaces/INotificationService";
 import { AppointmentActionDTO } from "@application/dtos/appointment.dto";
-import { GenericErrors, AppointmentErrors, BusinessErrors } from "@/core/domain/errors";
+import {
+  AppointmentNotFoundError,
+  BusinessNotFoundError,
+  UnauthorizedError,
+} from "@/core/domain/errors";
 
 export class CancelAppointmentUseCase {
   constructor(
@@ -15,12 +19,12 @@ export class CancelAppointmentUseCase {
     const appointment = await this.appointmentRepository.findById(
       dto.appointmentId,
     );
-    if (!appointment) throw new AppointmentErrors.NotFound();
+    if (!appointment) throw new AppointmentNotFoundError();
 
     const business = await this.businessRepository.findById(dto.businessId);
-    if (!business) throw new BusinessErrors.NotFound();
+    if (!business) throw new BusinessNotFoundError();
 
-    if (appointment.businessId !== business.id) throw new GenericErrors.Unauthorized();
+    if (appointment.businessId !== business.id) throw new UnauthorizedError();
 
     appointment.cancel();
     await this.appointmentRepository.save(appointment);

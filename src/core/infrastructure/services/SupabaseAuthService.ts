@@ -1,6 +1,12 @@
 import { createClient } from "@infrastructure/lib/supabase/server";
 import { IAuthService, AuthUser } from "@application/interfaces/IAuthService";
-import { AuthErrors } from "@/core/domain/errors";
+import {
+  InvalidCredentialsError,
+  EmailAlreadyExistsError,
+  EmailNotConfirmedError,
+  AuthFailedError,
+  InvalidTokenError,
+} from "@/core/domain/errors";
 
 // Supabase Auth error codes reference: https://supabase.com/docs/reference/javascript/auth-api-error-codes
 const SUPABASE_ERROR_CODES = {
@@ -33,13 +39,13 @@ export class SupabaseAuthService implements IAuthService {
         error.message?.includes("already registered") ||
         error.code === SUPABASE_ERROR_CODES.EMAIL_ALREADY_EXISTS
       ) {
-        throw new AuthErrors.EmailAlreadyExists();
+        throw new EmailAlreadyExistsError();
       }
       console.error("Supabase signUp error:", error);
-      throw new AuthErrors.AuthFailed();
+      throw new AuthFailedError();
     }
 
-    if (!data.user) throw new AuthErrors.AuthFailed();
+    if (!data.user) throw new AuthFailedError();
 
     return {
       id: data.user.id,
@@ -58,24 +64,23 @@ export class SupabaseAuthService implements IAuthService {
       password: props.password,
     });
 
-    console.log(SupabaseAuthService.name, { data, error });
-
     if (error) {
       if (error.code === SUPABASE_ERROR_CODES.EMAIL_NOT_CONFIRMED) {
-        throw new AuthErrors.EmailNotConfirmed();
+        throw new EmailNotConfirmedError();
       }
       if (
         error.code === SUPABASE_ERROR_CODES.INVALID_CREDENTIALS ||
         error.code === SUPABASE_ERROR_CODES.USER_NOT_FOUND
       ) {
-        throw new AuthErrors.InvalidCredentials();
+        throw new InvalidCredentialsError();
       }
+      
       console.error("Supabase signIn error:", error);
-      throw new AuthErrors.AuthFailed();
+      throw new AuthFailedError();
     }
 
     if (!data.user || !data.session) {
-      throw new AuthErrors.InvalidCredentials();
+      throw new InvalidCredentialsError();
     }
 
     return {
@@ -100,7 +105,7 @@ export class SupabaseAuthService implements IAuthService {
       error,
     } = await supabase.auth.getUser(token);
 
-    if (error || !user) throw new AuthErrors.InvalidToken();
+    if (error || !user) throw new InvalidTokenError();
 
     return {
       id: user.id,

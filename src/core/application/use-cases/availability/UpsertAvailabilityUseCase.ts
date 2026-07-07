@@ -2,7 +2,7 @@ import { IAvailabilityRepository } from "@application/interfaces/IAvailabilityRe
 import { IBusinessRepository } from "@application/interfaces/IBusinessRepository";
 import { UpsertAvailabilityDTO } from "@application/dtos/availability.dto";
 import { Availability } from "@domain/entities/Availability";
-import { NotFoundError, UnauthorizedError } from "@domain/errors";
+import { BusinessNotFoundError, UnauthorizedError } from "@/core/domain/errors";
 
 export class UpsertAvailabilityUseCase {
   constructor(
@@ -15,7 +15,7 @@ export class UpsertAvailabilityUseCase {
     dto: UpsertAvailabilityDTO,
   ): Promise<Availability[]> {
     const business = await this.businessRepository.findById(dto.businessId);
-    if (!business) throw new NotFoundError("Business");
+    if (!business) throw new BusinessNotFoundError();
     if (business.userId !== userId) throw new UnauthorizedError();
 
     const results = await Promise.all(

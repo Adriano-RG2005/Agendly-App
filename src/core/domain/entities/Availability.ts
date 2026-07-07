@@ -1,4 +1,4 @@
-import { ValidationError } from "@domain/errors";
+import { ValidationFailedError } from "@/core/domain/errors";
 
 export enum DayOfWeek {
   MONDAY = 0,
@@ -15,8 +15,8 @@ export class Availability {
     public readonly id: string,
     public readonly businessId: string,
     public readonly dayOfWeek: DayOfWeek,
-    public readonly startTime: string, // formato HH:mm
-    public readonly endTime: string, // formato HH:mm
+    public readonly startTime: string,
+    public readonly endTime: string,
     public readonly isActive: boolean,
   ) {}
 
@@ -29,15 +29,21 @@ export class Availability {
     isActive: boolean;
   }): Availability {
     if (!Availability.isValidTime(props.startTime)) {
-      throw new ValidationError("Invalid start time format. Use HH:mm");
+      throw new ValidationFailedError(
+        "Invalid start time format. Use HH:mm",
+      );
     }
 
     if (!Availability.isValidTime(props.endTime)) {
-      throw new ValidationError("Invalid end time format. Use HH:mm");
+      throw new ValidationFailedError(
+        "Invalid end time format. Use HH:mm",
+      );
     }
 
     if (props.startTime >= props.endTime) {
-      throw new ValidationError("Start time must be before end time");
+      throw new ValidationFailedError(
+        "Start time must be before end time",
+      );
     }
 
     return new Availability(

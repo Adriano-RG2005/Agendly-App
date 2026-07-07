@@ -1,7 +1,11 @@
 import { IAppointmentRepository } from "@application/interfaces/IAppointmentRepository";
 import { IBusinessRepository } from "@application/interfaces/IBusinessRepository";
 import { AppointmentActionDTO } from "@application/dtos/appointment.dto";
-import { NotFoundError, UnauthorizedError } from "@domain/errors";
+import {
+  AppointmentNotFoundError,
+  BusinessNotFoundError,
+  UnauthorizedError,
+} from "@/core/domain/errors";
 
 export class CompleteAppointmentUseCase {
   constructor(
@@ -13,10 +17,10 @@ export class CompleteAppointmentUseCase {
     const appointment = await this.appointmentRepository.findById(
       dto.appointmentId,
     );
-    if (!appointment) throw new NotFoundError("Appointment");
+    if (!appointment) throw new AppointmentNotFoundError();
 
     const business = await this.businessRepository.findById(dto.businessId);
-    if (!business) throw new NotFoundError("Business");
+    if (!business) throw new BusinessNotFoundError();
 
     if (appointment.businessId !== business.id) throw new UnauthorizedError();
 

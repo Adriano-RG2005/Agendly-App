@@ -3,7 +3,7 @@
 import { loginUseCase } from "@/core/container";
 import { LoginDTO } from "@application/dtos/auth.dto";
 import { z } from "zod";
-import { getUserFriendlyMessage } from "@/lib/errors";
+import { getErrorMessage } from "@/lib/errors";
 
 export async function loginAction(formData: LoginDTO) {
   try {
@@ -12,7 +12,7 @@ export async function loginAction(formData: LoginDTO) {
     if (!parsed.success) {
       return {
         success: false,
-        error: getUserFriendlyMessage("GENERIC_VALIDATION_FAILED"),
+        error: getErrorMessage("GENERIC_VALIDATION_FAILED"),
         details: z.treeifyError(parsed.error),
       };
     }
@@ -27,7 +27,7 @@ export async function loginAction(formData: LoginDTO) {
     console.error("Login Action Error:", error);
     return {
       success: false,
-      error: getUserFriendlyMessage(error),
+      error: getErrorMessage(error),
     };
   }
 }

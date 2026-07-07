@@ -5,7 +5,11 @@ import { INotificationService } from "@application/interfaces/INotificationServi
 import { CreateAppointmentDTO } from "@application/dtos/appointment.dto";
 import { Appointment } from "@domain/entities/Appointment";
 import { addMinutes, format } from "date-fns";
-import { GenericErrors, BusinessErrors, AppointmentErrors } from "@/core/domain/errors";
+import {
+  BusinessNotFoundError,
+  ValidationFailedError,
+  TimeSlotUnavailableError,
+} from "@/core/domain/errors";
 
 export class CreateAppointmentUseCase {
   constructor(
@@ -17,7 +21,7 @@ export class CreateAppointmentUseCase {
 
   async execute(dto: CreateAppointmentDTO): Promise<Appointment> {
     const business = await this.businessRepository.findBySlug(dto.businessSlug);
-    if (!business) throw new BusinessErrors.NotFound();
+    if (!business) throw new BusinessNotFoundError();
 
     const date = new Date(dto.date);
     const dayOfWeek = (date.getDay() + 6) % 7;
@@ -27,14 +31,13 @@ export class CreateAppointmentUseCase {
     const dayAvail = availability.find((a) => a.dayOfWeek === dayOfWeek);
 
     if (!dayAvail)
-      throw new GenericErrors.ValidationFailed(
-        undefined,
+      throw new ValidationFailedError(
         "Business is not available on this day",
       );
 
     const slots = dayAvail.getSlots(business.durationMin);
     if (!slots.includes(dto.startTime)) {
-      throw new GenericErrors.ValidationFailed(undefined, "Invalid time slot");
+      throw new ValidationFailedError("Invalid time slot");
     }
 
     const taken = await this.appointmentRepository.isSlotTaken({
@@ -42,7 +45,7 @@ export class CreateAppointmentUseCase {
       date: dto.date,
       startTime: dto.startTime,
     });
-    if (taken) throw new AppointmentErrors.TimeSlotUnavailable();
+    if (taken) throw new TimeSlotUnavailableError();
 
     const [h, m] = dto.startTime.split(":").map(Number);
     const start = new Date(2000, 0, 1, h, m);

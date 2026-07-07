@@ -1,7 +1,7 @@
 import { IBusinessRepository } from "@application/interfaces/IBusinessRepository";
 import { CreateBusinessDTO } from "@application/dtos/business.dto";
 import { Business } from "@domain/entities/Business";
-import { GenericErrors } from "@/core/domain/errors";
+import { ConflictError } from "@/core/domain/errors";
 
 export class CreateBusinessUseCase {
   constructor(private readonly businessRepository: IBusinessRepository) {}
@@ -9,7 +9,7 @@ export class CreateBusinessUseCase {
   async execute(dto: CreateBusinessDTO): Promise<Business> {
     const existing = await this.businessRepository.findByUserId(dto.userId);
 
-    if (existing) throw new GenericErrors.Conflict("User already has a business");
+    if (existing) throw new ConflictError("User already has a business");
 
     const baseSlug = dto.slug ?? Business.generateSlug(dto.name);
 

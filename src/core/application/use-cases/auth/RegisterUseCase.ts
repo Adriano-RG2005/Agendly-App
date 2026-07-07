@@ -2,7 +2,7 @@ import { IAuthService } from "@application/interfaces/IAuthService";
 import { IUserRepository } from "@application/interfaces/IUserRepository";
 import { RegisterDTO } from "@application/dtos/auth.dto";
 import { User } from "@domain/entities/User";
-import { AuthErrors } from "@/core/domain/errors";
+import { EmailAlreadyExistsError, RegistrationFailedError } from "@/core/domain/errors";
 
 export class RegisterUseCase {
   constructor(
@@ -13,7 +13,7 @@ export class RegisterUseCase {
   async execute(dto: RegisterDTO): Promise<User> {
     const existing = await this.userRepository.findByEmail(dto.email);
 
-    if (existing) throw new AuthErrors.EmailAlreadyExists();
+    if (existing) throw new EmailAlreadyExistsError();
 
     const authUser = await this.authService.signUp({
       email: dto.email,
@@ -32,10 +32,8 @@ export class RegisterUseCase {
       return user;
     } catch (error) {
       console.error("Failed to create user profile:", error);
-      // Compensación: si falla la creación del perfil,
-      // eliminamos el usuario de Auth para evitar inconsistencias
       await this.authService.deleteUser(authUser.id);
-      throw new AuthErrors.RegistrationFailed();
+      throw new RegistrationFailedError();
     }
   }
 }

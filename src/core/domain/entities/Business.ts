@@ -1,4 +1,4 @@
-import { ValidationError } from "@domain/errors";
+import { ValidationFailedError } from "@/core/domain/errors";
 
 export class Business {
   private constructor(
@@ -25,13 +25,15 @@ export class Business {
     createdAt: Date;
   }): Business {
     if (!Business.isValidSlug(props.slug)) {
-      throw new ValidationError(
+      throw new ValidationFailedError(
         "Slug must be lowercase letters, numbers and hyphens only",
       );
     }
 
     if (props.durationMin < 15 || props.durationMin > 480) {
-      throw new ValidationError("Duration must be between 15 and 480 minutes");
+      throw new ValidationFailedError(
+        "Duration must be between 15 and 480 minutes",
+      );
     }
 
     return new Business(
@@ -52,7 +54,7 @@ export class Business {
       .toLowerCase()
       .trim()
       .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "") // elimina acentos
+      .replace(/[\u0300-\u036f]/g, "")
       .replace(/[^a-z0-9\s-]/g, "")
       .replace(/\s+/g, "-")
       .replace(/-+/g, "-");

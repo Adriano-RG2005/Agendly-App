@@ -10,7 +10,7 @@ import {
   UpdateBusinessDTO,
 } from "@application/dtos/business.dto";
 import { revalidatePath } from "next/cache";
-import { getUserFriendlyMessage } from "@/lib/errors";
+import { getErrorMessage } from "@/lib/errors";
 
 export async function saveBusinessAction(
   userId: string,
@@ -52,7 +52,7 @@ export async function saveBusinessAction(
     console.error("Save Business Action Error:", error);
     return {
       success: false,
-      error: getUserFriendlyMessage(error),
+      error: getErrorMessage(error),
     };
   }
 }

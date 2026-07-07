@@ -3,7 +3,7 @@
 import { registerUseCase } from "@/core/container";
 import { RegisterDTO } from "@application/dtos/auth.dto";
 import { z } from "zod";
-import { getUserFriendlyMessage } from "@/lib/errors";
+import { getErrorMessage } from "@/lib/errors";
 
 export async function registerAction(formData: RegisterDTO) {
   try {
@@ -12,7 +12,7 @@ export async function registerAction(formData: RegisterDTO) {
     if (!parsed.success) {
       return {
         success: false,
-        error: getUserFriendlyMessage("GENERIC_VALIDATION_FAILED"),
+        error: getErrorMessage("GENERIC_VALIDATION_FAILED"),
         details: z.treeifyError(parsed.error),
       };
     }
@@ -31,7 +31,7 @@ export async function registerAction(formData: RegisterDTO) {
     console.error("Registration Action Error:", error);
     return {
       success: false,
-      error: getUserFriendlyMessage(error),
+      error: getErrorMessage(error),
     };
   }
 }

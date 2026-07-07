@@ -3,7 +3,7 @@ import { IAvailabilityRepository } from "@application/interfaces/IAvailabilityRe
 import { IAppointmentRepository } from "@application/interfaces/IAppointmentRepository";
 import { Business } from "@domain/entities/Business";
 import { Availability } from "@domain/entities/Availability";
-import { NotFoundError } from "@domain/errors";
+import { BusinessNotFoundError } from "@/core/domain/errors";
 
 export interface PublicBusinessResult {
   business: Business;
@@ -19,12 +19,11 @@ export class GetPublicBusinessUseCase {
 
   async execute(slug: string, fromDate: string): Promise<PublicBusinessResult> {
     const business = await this.businessRepository.findBySlug(slug);
-    if (!business) throw new NotFoundError("Business");
+    if (!business) throw new BusinessNotFoundError();
 
     const activeAvailability =
       await this.availabilityRepository.findActiveByBusiness(business.id);
 
-    // Generar slots para los próximos 14 días
     const availableSlots = await this.buildAvailableSlots(
       business.id,
       business.durationMin,
@@ -49,16 +48,14 @@ export class GetPublicBusinessUseCase {
       const date = new Date(fromDate);
       date.setDate(date.getDate() + i);
 
-      const dayOfWeek = (date.getDay() + 6) % 7; // ajuste: 0=Lunes
+      const dayOfWeek = (date.getDay() + 6) % 7;
       const dateStr = date.toISOString().split("T")[0];
       const dayAvail = availability.find((a) => a.dayOfWeek === dayOfWeek);
 
       if (!dayAvail) continue;
 
-      // Todos los slots posibles del día
       const allSlots = dayAvail.getSlots(durationMin);
 
-      // Filtrar slots ya ocupados
       const freeSlots = await Promise.all(
         allSlots.map(async (slot) => {
           const taken = await this.appointmentRepository.isSlotTaken({

@@ -1,4 +1,4 @@
-import { ValidationError, ConflictError } from "@domain/errors/DomainError";
+import { ValidationFailedError, ConflictError } from "@/core/domain/errors";
 
 export enum AppointmentStatus {
   PENDING = "pending",
@@ -13,9 +13,9 @@ export class Appointment {
     public readonly clientName: string,
     public readonly clientEmail: string,
     public readonly clientWhatsapp: string | null,
-    public readonly date: string, // formato YYYY-MM-DD
-    public readonly startTime: string, // formato HH:mm
-    public readonly endTime: string, // formato HH:mm
+    public readonly date: string,
+    public readonly startTime: string,
+    public readonly endTime: string,
     public status: AppointmentStatus,
     public reminderSent: boolean,
     public readonly createdAt: Date,
@@ -35,11 +35,15 @@ export class Appointment {
     createdAt: Date;
   }): Appointment {
     if (props.clientName.trim().length < 2) {
-      throw new ValidationError("Client name must be at least 2 characters");
+      throw new ValidationFailedError(
+        "Client name must be at least 2 characters",
+      );
     }
 
     if (!Appointment.isValidDate(props.date)) {
-      throw new ValidationError("Invalid date format. Use YYYY-MM-DD");
+      throw new ValidationFailedError(
+        "Invalid date format. Use YYYY-MM-DD",
+      );
     }
 
     return new Appointment(

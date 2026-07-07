@@ -1,7 +1,7 @@
 import { IBusinessRepository } from "@application/interfaces/IBusinessRepository";
 import { UpdateBusinessDTO } from "@application/dtos/business.dto";
 import { Business } from "@domain/entities/Business";
-import { NotFoundError, UnauthorizedError } from "@domain/errors";
+import { BusinessNotFoundError, UnauthorizedError } from "@/core/domain/errors";
 
 export class UpdateBusinessUseCase {
   constructor(private readonly businessRepository: IBusinessRepository) {}
@@ -13,9 +13,8 @@ export class UpdateBusinessUseCase {
   ): Promise<Business> {
     const business = await this.businessRepository.findById(businessId);
 
-    if (!business) throw new NotFoundError("Business");
+    if (!business) throw new BusinessNotFoundError();
 
-    // Verificar que el negocio pertenece al usuario
     if (business.userId !== userId) throw new UnauthorizedError();
 
     return this.businessRepository.update(businessId, dto);
